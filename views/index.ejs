@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css">
+  <title>Dashboard Pessoal</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>
+      <%= today %>
+    </h1>
+    <p class="phrase">💬 "<%= phrase %>"</p>
+
+    <div class="info">
+      <h2>
+        ☀️ Clima em <span id="weather-city">
+          <%= weather.city %>
+        </span>
+      </h2>
+      <h2>
+        <p id="weather-info">
+          <%= weather.temp %>°C - <%= weather.desc %>
+        </p>
+      </h2>
+
+      <h2>📰 Notícia</h2>
+      <div id="news">
+        <a id="news-link" href="<%= news.link %>" target="_blank">
+          <%= news.title %>
+        </a>
+      </div>
+    </div>
+
+    <div class="video">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/MX-iaTDEyGI?si=NLYJoxw3UbAw7j8n"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    async function atualizarFrase() {
+      try {
+        const res = await fetch('/frase');
+        const data = await res.json();
+        const phraseElement = document.querySelector('.phrase');
+        if (phraseElement && data.phrase) {
+          phraseElement.textContent = `💬 "${data.phrase}"`;
+          console.log("🔁 Frase atualizada:", data.phrase);
+        }
+      } catch (e) {
+        console.error("Erro ao atualizar frase:", e);
+      }
+    }
+    atualizarFrase();
+    setInterval(atualizarFrase, 10000);
+  </script>
+
+  <script>
+    let climaIndex = 0;
+    let climas = [];
+
+    async function carregarClimas() {
+      try {
+        const res = await fetch('/weather');
+        climas = await res.json();
+        atualizarClima();
+        setInterval(() => {
+          atualizarClima();
+        }, 10000);
+      } catch (e) {
+        console.error("Erro ao carregar clima:", e);
+      }
+    }
+
+    function atualizarClima() {
+      if (climas.length === 0) return;
+
+      const clima = climas[climaIndex];
+      const infoElement = document.getElementById('weather-info');
+      const cityElement = document.getElementById('weather-city');
+
+      if (clima && infoElement && cityElement) {
+        infoElement.textContent = `${clima.temp}°C - ${clima.desc}`;
+        cityElement.textContent = clima.city;
+        console.log("🔁 Clima atualizado:", clima.city);
+      }
+
+      climaIndex = (climaIndex + 1) % climas.length;
+    }
+
+    carregarClimas();
+  </script>
+
+  <script>
+    async function atualizarNoticia() {
+      try {
+        const res = await fetch('/noticia');
+        const noticia = await res.json();
+        const link = document.getElementById('news-link');
+        if (link && noticia.title && noticia.link) {
+          link.href = noticia.link;
+          link.textContent = noticia.title;
+        }
+      } catch (e) {
+        console.error("Erro ao atualizar notícia:", e);
+      }
+    }
+    atualizarNoticia();
+    setInterval(atualizarNoticia, 30000);
+  </script>
+</body>
+
+</html>
