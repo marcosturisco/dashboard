@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/style.css">
-  <title>Dashboard Pessoal</title>
+  <title>Personal Dashboard</title>
 </head>
 
 <body>
@@ -17,7 +17,7 @@
 
     <div class="info">
       <h2>
-        ☀️ Clima em <span id="weather-city">
+        <span id="weather-icon"></span> Weather in <span id="weather-city">
           <%= weather.city %>
         </span>
       </h2>
@@ -27,7 +27,7 @@
         </p>
       </h2>
 
-      <h2>📰 Notícia</h2>
+      <h2>📰 News</h2>
       <div id="news">
         <a id="news-link" href="<%= news.link %>" target="_blank">
           <%= news.title %>
@@ -44,75 +44,73 @@
   </div>
 
   <script>
-    async function atualizarFrase() {
+    async function updatePhrase() {
       try {
-        const res = await fetch('/frase');
+        const res = await fetch('/phrase');
         const data = await res.json();
         const phraseElement = document.querySelector('.phrase');
         if (phraseElement && data.phrase) {
           phraseElement.textContent = `💬 "${data.phrase}"`;
-          console.log("🔁 Frase atualizada:", data.phrase);
+          console.log("🔁 Phrase has been updated:", data.phrase);
         }
       } catch (e) {
-        console.error("Erro ao atualizar frase:", e);
+        console.error("Error while updating the phrase", e);
       }
     }
-    atualizarFrase();
-    setInterval(atualizarFrase, 10000);
+    updatePhrase();
+    setInterval(updatePhrase, 10000);
   </script>
 
   <script>
-    let climaIndex = 0;
-    let climas = [];
+    let weatherIndex = 0;
+    let weathers = [];
 
-    async function carregarClimas() {
+    async function loadWeather() {
       try {
         const res = await fetch('/weather');
-        climas = await res.json();
-        atualizarClima();
+        weathers = await res.json();
+        updateWeather();
         setInterval(() => {
-          atualizarClima();
+          updateWeather();
         }, 10000);
       } catch (e) {
-        console.error("Erro ao carregar clima:", e);
+        console.error("Error while updating the weather", e);
       }
     }
 
-    function atualizarClima() {
-      if (climas.length === 0) return;
-
-      const clima = climas[climaIndex];
+    function updateWeather() {
+      if (weathers.length === 0) return;
+      const weather = weathers[weatherIndex];
       const infoElement = document.getElementById('weather-info');
       const cityElement = document.getElementById('weather-city');
-
-      if (clima && infoElement && cityElement) {
-        infoElement.textContent = `${clima.temp}°C - ${clima.desc}`;
-        cityElement.textContent = clima.city;
-        console.log("🔁 Clima atualizado:", clima.city);
+      const iconElement = document.getElementById('weather-icon');
+      if (weather && infoElement && cityElement && iconElement) {
+        infoElement.textContent = `${weather.temp}°C - ${weather.desc}`;
+        cityElement.textContent = weather.city;
+        iconElement.innerHTML = weather.icon;
+        console.log("🔁 Weather has been updated:", weather.city);
       }
-
-      climaIndex = (climaIndex + 1) % climas.length;
+      weatherIndex = (weatherIndex + 1) % weathers.length;
     }
-
-    carregarClimas();
+    loadWeather();
   </script>
 
   <script>
-    async function atualizarNoticia() {
+    async function updateNews() {
       try {
-        const res = await fetch('/noticia');
-        const noticia = await res.json();
+        const res = await fetch('/news');
+        const news = await res.json();
         const link = document.getElementById('news-link');
-        if (link && noticia.title && noticia.link) {
-          link.href = noticia.link;
-          link.textContent = noticia.title;
+        if (link && news.title && news.link) {
+          link.href = news.link;
+          link.textContent = news.title;
         }
       } catch (e) {
-        console.error("Erro ao atualizar notícia:", e);
+        console.error("Error while updating the news", e);
       }
     }
-    atualizarNoticia();
-    setInterval(atualizarNoticia, 30000);
+    updateNews();
+    setInterval(updateNews, 30000);
   </script>
 </body>
 
