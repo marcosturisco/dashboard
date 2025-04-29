@@ -1,35 +1,69 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  background-color: #1f1f1f;
-  color: #f0f0f0;
-  font-family: Arial, sans-serif;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('../images/bg-dashboard.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #e4e4e4;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
   text-align: center;
-  padding: 30px;
+  padding: 40px 20px;
+  line-height: 1.6;
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  color: #ffffff;
+}
+
+h2 {
+  font-size: 2rem;
+  margin: 20px 0 10px;
+  color: #dddddd;
 }
 
 .phrase {
   font-style: italic;
-  margin: 20px 0;
-}
-
-.info {
+  font-size: 1.8rem;
+  color: #cfcfcf;
   margin: 30px 0;
 }
 
+.info p {
+  font-size: 1.6rem;
+  margin-top: 10px;
+  color: #bbbbbb;
+}
+
 a {
-  color: #4ea8de;
+  color: #8ecae6;
   text-decoration: none;
+  font-size: 1.4rem;
 }
 
 a:hover {
   text-decoration: underline;
+  color: #aadff0;
 }
 
 .video iframe {
-  margin-top: 20px;
-  border-radius: 12px;
+  width: 100%;
+  max-width: 700px;
+  height: 400px;
+  margin-top: 30px;
+  border: none;
+  border-radius: 10px;
 }
